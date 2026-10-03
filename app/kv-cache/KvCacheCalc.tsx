@@ -93,6 +93,7 @@ export default function KvCacheCalc() {
   const [decodePar, setDecodePar] = React.useState<PhaseParallelInput>({ tp: '1', pp: '1', moeTp: '', moeEp: '' })
   const [memFractionKind, setMemFractionKind] = React.useState('of_total')
   const [memFractionValue, setMemFractionValue] = React.useState(1.0)
+  const memFractionValueUserEdited = React.useRef(false)
   const [advancedOpen, setAdvancedOpen] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
   const [results, setResults] = React.useState<PhaseResult[]>([])
@@ -117,8 +118,13 @@ export default function KvCacheCalc() {
     if (!selectedBackend) return
 
     if (selectedBackend.memoryFraction != null) {
-      setMemFractionValue(selectedBackend.memoryFraction)
-      setMemFractionValueInput(String(selectedBackend.memoryFraction))
+      if (!memFractionValueUserEdited.current) {
+        setMemFractionValue(selectedBackend.memoryFraction)
+        setMemFractionValueInput(String(selectedBackend.memoryFraction))
+      }
+    } else if (!memFractionValueUserEdited.current) {
+      setMemFractionValue(1.0)
+      setMemFractionValueInput('1.0')
     }
     setMemFractionKind(selectedBackend.memoryFractionKind)
   }, [backend, backendOptions, catalogLoading, hydrated])
@@ -181,6 +187,7 @@ export default function KvCacheCalc() {
   };
 
   const handleMemFractionValueChange = (raw: string) => {
+    memFractionValueUserEdited.current = true
     const cleaned = raw.replace(/[^0-9.]/g, '');
     setMemFractionValueInput(cleaned);
     const n = Number(cleaned);
@@ -336,7 +343,13 @@ export default function KvCacheCalc() {
                 <select
                   id="kv-backend"
                   value={backend}
-                  onChange={e => setBackend(e.target.value)}
+                  onChange={e => {
+                    const nextBackend = e.target.value
+                    if (backendOptions.find(option => option.id === nextBackend)?.memoryFraction != null) {
+                      memFractionValueUserEdited.current = false
+                    }
+                    setBackend(nextBackend)
+                  }}
                   className={styles.gpuSelect}
                 >
                   {backendOptions.map(option => (
