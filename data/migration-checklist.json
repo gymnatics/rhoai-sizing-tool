@@ -1,0 +1,60 @@
+{
+  "source": "https://micytao.github.io/rhoai-version-tracker/migration.html",
+  "plannedBreakingChanges36": [
+    {
+      "id": "fms-guardrails-removal",
+      "componentKeys": ["trustyai"],
+      "targetVersion": "3.6 (Q4 2026)",
+      "whatChanges": "Removal of FMS Guardrails Orchestrator. NeMo Guardrails becomes the default guardrail service.",
+      "migrationAction": "Migrate workloads off FMS Guardrails Orchestrator to NeMo Guardrails before upgrading to 3.6."
+    },
+    {
+      "id": "lmevaljob-deprecation",
+      "componentKeys": ["trustyai"],
+      "targetVersion": "3.6 (Q4 2026)",
+      "whatChanges": "Deprecate LMEvalJob in favor of a native LM-Eval-Harness EvalHub adapter.",
+      "migrationAction": "Stop authoring new LMEvalJob custom resources. Port existing evaluation jobs to the EvalHub SDK/CLI before upgrading to 3.6."
+    },
+    {
+      "id": "praxis-gateway-migration",
+      "componentKeys": ["kserve"],
+      "targetVersion": "3.6 (Q4 2026)",
+      "whatChanges": "Praxis-based AI Gateway becomes the data plane for the MaaS control plane, replacing Envoy + IPP + shim stacks.",
+      "migrationAction": "Keep gateway config under version control; test against Praxis in EA before cutover. HttpRoute/provider-translation configuration will change."
+    },
+    {
+      "id": "notebooks-2.0",
+      "componentKeys": ["workbenches"],
+      "targetVersion": "3.6 GA",
+      "whatChanges": "Notebooks 2.0 Tech Preview: new WorkspaceKind-based workbench model.",
+      "migrationAction": "Do not build new automation against Notebooks 1.x per-workbench custom-resource assumptions. Re-validate workbench provisioning scripts against WorkspaceKinds before committing to 2.0."
+    },
+    {
+      "id": "trustyai-rename",
+      "componentKeys": ["trustyai"],
+      "targetVersion": "3.6 (Q4 2026)",
+      "whatChanges": "Renaming TrustyAI Operator to AI Safety Operator, plus refactoring the TrustyAI Service from Java to Python.",
+      "migrationAction": "Update automation, Argo CD apps, and operator subscriptions that reference the TrustyAI Operator name/GVK before Q4 2026. Re-validate TrustyAI-service API consumers against the refactored runtime."
+    }
+  ],
+  "deprecationTimeline": [
+    { "feature": "Multi-model serving (ModelMesh)", "introduced": "2.5 (approx.)", "deprecated": "2.19", "status": "Retired from supported 3.x serving architecture" },
+    { "feature": "KServe Serverless deployment mode", "introduced": "2.5 (approx.)", "deprecated": "2.25", "status": "Retired from supported 3.x serving architecture" },
+    { "feature": "Kubeflow Training Operator v1", "introduced": "2.5 (approx.)", "deprecated": "2.25", "status": "Not yet removed; EUS exception until 27 Mar 2027" },
+    { "feature": "CodeFlare Operator", "introduced": "2.5 (approx.)", "deprecated": "2.24", "status": "Removed at 3.0; folded into KubeRay Operator" },
+    { "feature": "Embedded Kueue component", "introduced": "Undetermined", "deprecated": "2.24", "status": "Removed at 3.0; replaced by Red Hat build of Kueue Operator" },
+    { "feature": "SQLite as production OGX/Llama Stack metadata store", "introduced": "3.0", "deprecated": "3.2", "status": "Not removed; permitted for local dev/test only" },
+    { "feature": "Llama Stack -> OGX rename", "introduced": "3.0 (as Llama Stack)", "deprecated": "3.5 EA1 (breaking rename)", "status": "Manual migration required: API group/kind changes" },
+    { "feature": "FMS-Guardrails Orchestrator", "introduced": "2.19 (TP)", "deprecated": "3.5", "status": "Deprecated, will be removed in a future release (targeted 3.6 Q4 2026)" },
+    { "feature": "LM-Eval standalone evaluation service (LMEvalJob)", "introduced": "Pre-3.4", "deprecated": "3.5", "status": "Deprecated, targeted for 3.6 removal" },
+    { "feature": "RStudio Server workbench images", "introduced": "Pre-2.25", "deprecated": "3.5 (REMOVED)", "status": "Removed at 3.5 for AGPL licensing compliance" },
+    { "feature": "KServe LLMInferenceService flow control API (inference.networking.x-k8s.io)", "introduced": "3.4 (TP)", "deprecated": "3.5 (breaking rename on GA promotion)", "status": "API group moved to llm-d.ai; mandatory remediation for 3.4 TP adopters" }
+  ],
+  "upgradePathNotes": [
+    "3.3.2 (not 3.3.0/3.3.1) is the first 3.x release supporting migration from 2.x, and only from 2.25.4 or later.",
+    "At 3.5 GA: dedicated migration guide 'Assess and plan for migration from 2.25.9+ to 3.5' using rhai-cli, covering side-by-side and in-place approaches.",
+    "Anyone who configured llm-d flow control during the 3.4 TP window must update the API group, metrics prefix, and saturation-detector configuration path before/during the 3.5 upgrade.",
+    "Unconverted ModelMesh/KServe Serverless models return HTTP 503 immediately after upgrade with no grace period.",
+    "Custom workbench images built against oauth-proxy must be rebuilt for kube-rbac-proxy or they fail with redirect loops."
+  ]
+}

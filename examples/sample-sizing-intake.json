@@ -1,0 +1,68 @@
+{
+  "customer": {
+    "name": "Meridian Trust Bank",
+    "project": "GenAI Platform",
+    "deployment_type": "production",
+    "openshift_version": "4.21",
+    "connectivity": "connected_proxy",
+    "target": "on_prem_bare_metal"
+  },
+  "hardware": {
+    "existing": [
+      { "gpu": "H100 SXM", "count": 4, "form_factor": "HGX SXM", "servers": 1 }
+    ],
+    "planned": [
+      { "gpu": "H200 SXM", "count": 16, "form_factor": "HGX SXM 8-GPU", "servers": 2 }
+    ]
+  },
+  "growth": {
+    "horizon_years": 2,
+    "annual_growth_rate": null
+  },
+  "use_cases": [
+    {
+      "name": "Coding assistant",
+      "concurrent_users_low": 60,
+      "concurrent_users_high": 80,
+      "input_tokens": 150000,
+      "output_tokens": null,
+      "ttft_target_s": 8,
+      "tokens_per_s_target": 40,
+      "model_preference": "Qwen3.6-35B-A3B",
+      "notes": "Long context (~150K tokens), agentic developer use"
+    },
+    {
+      "name": "Customer support chatbot",
+      "concurrent_users_low": 200,
+      "concurrent_users_high": 800,
+      "input_tokens": 8000,
+      "output_tokens": 400,
+      "ttft_target_s": 2.5,
+      "tokens_per_s_target": 90,
+      "model_preference": null,
+      "notes": "Customer-facing, wants fast response"
+    },
+    {
+      "name": "Compliance document reviewer",
+      "concurrent_users_low": 15,
+      "concurrent_users_high": 15,
+      "input_tokens": 15000,
+      "output_tokens": 800,
+      "ttft_target_s": 6,
+      "tokens_per_s_target": null,
+      "model_preference": null,
+      "notes": "15 analysts, 4 hours/day, policy docs + case notes as input"
+    }
+  ],
+  "extraction_confidence": {
+    "customer": "high",
+    "hardware": "high",
+    "use_cases": "medium",
+    "missing_fields": [
+      "growth.annual_growth_rate (only '2x over 2 years' stated, not an explicit annual rate — confirm with customer whether they mean ~41%/yr compounding or a flat 2x target)",
+      "use_cases[0].output_tokens (not stated for coding assistant)",
+      "use_cases[2].tokens_per_s_target (not stated for compliance reviewer)",
+      "RHOAI components beyond guardrails were not discussed in detail ('some kind of safety layer' was mentioned) — confirm which platform components (pipelines, model registry, MLflow, etc.) the customer needs in Step 4 of the wizard"
+    ]
+  }
+}

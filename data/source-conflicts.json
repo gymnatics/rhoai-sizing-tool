@@ -1,0 +1,70 @@
+{
+  "source": "https://micytao.github.io/rhoai-version-tracker/conflicts.html",
+  "precedence": "Supported Configurations matrix > release notes > product guides > press coverage (corroboration only)",
+  "conflicts": [
+    {
+      "id": "ogx-core",
+      "componentKeys": ["ogx"],
+      "title": "OGX component/operator GA vs. OpenShift AI OGX integration guide TP",
+      "claimA": { "source": "Supported Configurations matrix (3.5)", "text": "OGX Operator + OGX component: GA on x86_64, Arm, IBM Power" },
+      "claimB": { "source": "OpenShift AI OGX product/integration guide (3.5)", "text": "OpenShift AI OGX integration: Technology Preview" },
+      "resolution": "Component support and integration/API maturity are genuinely separate layers here -- state both."
+    },
+    {
+      "id": "ogx-arm",
+      "componentKeys": ["ogx"],
+      "title": "OGX Arm (aarch64) architecture support unverified",
+      "claimA": { "source": "Registry detail (3.5 timeline)", "text": "Matrix lists OGX Operator 0.11.0 / OGX 1.1.2 as GA on x86_64, Arm, and IBM Power" },
+      "claimB": { "source": "Local matrix snapshot + 3.5 release notes", "text": "Snapshot only contains x86_64 rows; release notes never mention Arm/aarch64 for OGX (Power GA is separately corroborated, Arm is not)" },
+      "resolution": "Treat OGX Arm support as unconfirmed rather than settled GA."
+    },
+    {
+      "id": "nemo-guardrails-z",
+      "componentKeys": ["trustyai"],
+      "title": "IBM Z (s390x) support for NeMo Guardrails",
+      "claimA": { "source": "3.5 GA release notes", "text": "Announces IBM Z (s390x) support" },
+      "claimB": { "source": "Supported Configurations matrix (3.5)", "text": "Does not list NeMo Guardrails as available on IBM Z" },
+      "resolution": "Use the matrix for production support commitments until reconciled."
+    },
+    {
+      "id": "evalhub",
+      "componentKeys": ["trustyai"],
+      "title": "EvalHub formal support status",
+      "claimA": { "source": "3.5 GA release notes", "text": "EvalHub is generally available (GA), full Red Hat support" },
+      "claimB": { "source": "Supported Configurations matrix (3.5)", "text": "EvalHub 0.3.0: Technology Preview on x86_64; unavailable on Arm/IBM Power/IBM Z" },
+      "resolution": "Matrix governs formal/contractual support classification; release-note GA statement preserved as release-history language."
+    },
+    {
+      "id": "kuberay",
+      "componentKeys": ["ray"],
+      "title": "Supported KubeRay version at 3.5",
+      "claimA": { "source": "3.5 release notes", "text": "KubeRay operator upgraded to 1.6.x" },
+      "claimB": { "source": "Supported Configurations matrix (3.5)", "text": "KubeRay 1.4.2 (GA x86_64/Arm, TP Power, unavailable Z)" },
+      "resolution": "Use the matrix for formal supported-version statements until reconciled."
+    },
+    {
+      "id": "autorag-power",
+      "componentKeys": [],
+      "title": "AutoRAG IBM Power availability",
+      "claimA": { "source": "3.5 EA2 release notes", "text": "AutoRAG support extended to IBM Power" },
+      "claimB": { "source": "Supported Configurations matrix (3.5)", "text": "AutoRAG not listed as available on IBM Power" },
+      "resolution": "Treated as an unresolved source conflict; matrix governs."
+    },
+    {
+      "id": "platform-lifecycle-ga-date",
+      "componentKeys": [],
+      "title": "3.5 GA date discrepancy",
+      "claimA": { "source": "OpenShift AI Self-Managed Life Cycle page", "text": "2026-08-27" },
+      "claimB": { "source": "3.5 release notes / launch press coverage", "text": "2026-09-09" },
+      "resolution": "Life Cycle page date drives Full Support/EUS phase math; release-notes date is the milestone-history figure."
+    },
+    {
+      "id": "maas-multiprovider-passthrough",
+      "componentKeys": [],
+      "title": "Multi-provider external model support: roadmap deck says GA at 3.5, release notes say TP",
+      "claimA": { "source": "Roadmap deck (Model Gateway slide, Q3 2026, RHAI 3.5)", "text": "Multi-provider external model support (GA)" },
+      "claimB": { "source": "3.5 release notes / feature registry", "text": "Technology Preview at 3.5: expanded native-provider passthrough via Anthropic Messages API; no GA promotion recorded" },
+      "resolution": "Release notes take precedence over roadmap decks; registry keeps TP. Watch 3.6 release notes to resolve."
+    }
+  ]
+}

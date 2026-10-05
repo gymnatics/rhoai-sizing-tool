@@ -1,0 +1,165 @@
+.wrapper {
+  width: 100%;
+}
+
+.labelRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 600;
+  font-family: var(--mono);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--t2, #3c3f42);
+  line-height: 1.2;
+  margin: 0;
+}
+
+/* ─── PatternFly Switch sizing ─── */
+.wrapper :global(.pf-v6-c-switch) {
+  --pf-v6-c-switch--Height: 18px !important;
+  --pf-v6-c-switch__toggle--Width: 32px !important;
+  --pf-v6-c-switch__toggle--Height: 16px !important;
+  --pf-v6-c-switch__toggle--BorderRadius: 9px !important;
+  font-size: 11.5px !important;
+}
+
+.wrapper :global(.pf-v6-c-switch__label) {
+  font-size: 11.5px !important;
+  font-weight: 500;
+}
+
+.wrapper :global(.pf-v6-c-switch__toggle) {
+  width: 32px !important;
+  height: 16px !important;
+}
+
+.wrapper :global(.pf-v6-c-switch__toggle::before) {
+  width: 12px !important;
+  height: 12px !important;
+}
+
+/* ─── PatternFly MenuToggle overrides ─── */
+.menuToggle {
+  min-height: 42px;
+}
+
+.clearBtn {
+  padding: 4px !important;
+}
+
+/* ─── PatternFly Select menu overrides ─── */
+.selectList {
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+/* ─── Custom option ("Use: ...") ─── */
+.customOption {
+  border-top: 1px solid #d2d2d2;
+  margin-top: 4px;
+  font-style: italic;
+  color: #3c3f42;
+}
+.customOptionLabel {
+  font-family: var(--mono, monospace);
+  font-size: 12px;
+  font-weight: 500;
+  color: #0066cc;
+  margin-right: 6px;
+  font-style: normal;
+}
+
+/* ─── Helper text ─── */
+.helperText {
+  font-size: 12px;
+  color: var(--gc-text-3, #6a6e73);
+  margin-top: 4px;
+}
+
+.requestLink {
+  color: var(--blue, #0066cc);
+}
+.requestLink:hover {
+  text-decoration: underline;
+}
+
+/* ─── Option badges ─── */
+.optionRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+}
+
+.badges {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.testedBadge,
+.catalogBadge,
+.hfBadge {
+  font-size: 11.5px;
+  font-weight: 600;
+  font-family: var(--mono, monospace);
+  padding: 2px 6px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.testedBadge {
+  background-color: #e8f4f8;
+  color: #0066cc;
+}
+
+.catalogBadge {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.hfBadge {
+  background-color: #fdf0d5;
+  color: #8a6d00;
+}
+
+.selectedBadges {
+  display: flex;
+  gap: 4px;
+  margin-right: 8px;
+}
+
+/* ─── Row metadata chips (params, type, context, precisions) ─── */
+.optionLabel {
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.optionMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+  margin-top: 3px;
+}
+
+.metaChip {
+  font-size: 11.5px;
+  font-family: var(--mono, monospace);
+  font-weight: 500;
+  color: var(--t2, #3c3f42);
+  background-color: #f2f2f2;
+  border-radius: 3px;
+  padding: 1px 5px;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}

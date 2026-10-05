@@ -1,0 +1,31 @@
+# Local development: Next.js sizing wizard (forked ConfigIQ) + Python Excel
+# generation microservice.
+#
+# Usage:
+#   docker compose up --build
+#   open http://localhost:3000/wizard/step1
+#
+# For day-to-day frontend development, it's usually faster to run the two
+# services natively instead (see README.md): `npm run dev` for the app and
+# `uvicorn main:app --reload` for the Excel service.
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Containerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - AISIMULATORS_GATEWAY_URL=${AISIMULATORS_GATEWAY_URL:-https://aisimulators.dev}
+      - AICOSTINGS_GATEWAY_URL=${AICOSTINGS_GATEWAY_URL:-https://aicostings.dev}
+      - EXCEL_SERVICE_URL=http://excel-service:8000
+    depends_on:
+      - excel-service
+
+  excel-service:
+    build:
+      context: .
+      dockerfile: excel-service/Dockerfile
+    ports:
+      - "8000:8000"

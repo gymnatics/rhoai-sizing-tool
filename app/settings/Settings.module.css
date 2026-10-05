@@ -1,0 +1,204 @@
+/* ============================================================================
+   Settings page — uses global theme tokens from theme.css / globals.css.
+   No local re-aliases. No font-size below 11.5px; no text lighter than
+   --gc-text-2 for labels, values, or descriptions.
+   ============================================================================ */
+
+.page {
+  font-family: var(--sans);
+  color: var(--gc-text);
+  font-size: 15px;
+  line-height: 1.5;
+  max-width: 860px;
+  padding: 32px 32px 64px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Page header ── */
+.header    { margin-bottom: 28px; }
+.pageTitle {
+  font-family: var(--display);
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0 0 6px;
+  color: var(--gc-text);
+}
+.subtitle  { font-size: 15px; color: var(--gc-text-2); margin: 0; }
+
+/* ── Section list ── */
+.sections { display: flex; flex-direction: column; gap: 12px; }
+
+/* ── Individual section card ── */
+.section {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 20px 24px 22px;
+}
+
+.sectionHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.sectionTitle {
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--gc-text);
+  margin-bottom: 3px;
+}
+
+.sectionDesc {
+  font-size: 13px;
+  color: var(--gc-text-2);
+  line-height: 1.5;
+  max-width: 560px;
+}
+
+/* ── Field layout ── */
+.fieldWrap { display: flex; flex-direction: column; gap: 6px; }
+
+.toggle :global(.pf-v6-c-switch) {
+  --pf-v6-c-switch--Height: 18px !important;
+  --pf-v6-c-switch__toggle--Width: 32px !important;
+  --pf-v6-c-switch__toggle--Height: 16px !important;
+  --pf-v6-c-switch__toggle--BorderRadius: 9px !important;
+  font-size: 11px !important;
+}
+.toggle :global(.pf-v6-c-switch__label) {
+  font-size: 11px !important;
+  font-weight: 500;
+}
+.toggle :global(.pf-v6-c-switch__toggle) {
+  width: 32px !important;
+  height: 16px !important;
+}
+.toggle :global(.pf-v6-c-switch__toggle::before) {
+  width: 12px !important;
+  height: 12px !important;
+}
+
+.fieldLabel {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gc-text-2);
+  display: block;
+}
+
+/* ── Model input with in-line catalog chip ── */
+.modelInputWrapper {
+  position: relative;
+  max-width: 480px;
+}
+.modelInput {
+  width: 100%;
+  height: 42px;
+  border: 1px solid var(--border-light, #b8bbbe);
+  border-radius: 4px;
+  padding: 7px 130px 7px 12px;
+  font-size: 14px;
+  font-family: var(--sans);
+  background: white;
+  color: var(--gc-text);
+  box-sizing: border-box;
+}
+.modelInput:focus {
+  outline: 2px solid var(--gc-link);
+  outline-offset: 1px;
+  border-color: var(--gc-link);
+}
+.autoChipWrapper {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.autoChipWrapper :global(.pf-v6-c-label) {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* ── Shared input base ── */
+.textInput {
+  height: 42px;
+  width: 100%;
+  border: 1px solid var(--border-light, #b8bbbe);
+  border-radius: 4px;
+  padding: 7px 12px;
+  font-size: 14px;
+  font-family: var(--sans);
+  background: white;
+  color: var(--gc-text);
+  box-sizing: border-box;
+}
+.textInput:focus {
+  outline: 2px solid var(--gc-link);
+  outline-offset: 1px;
+  border-color: var(--gc-link);
+}
+
+/* ── Token row (input + reveal button side-by-side) ── */
+.tokenRow {
+  display: flex;
+  align-items: stretch;
+  max-width: 480px;
+}
+.tokenRow .textInput {
+  border-right: none;
+  border-radius: 4px 0 0 4px;
+  flex: 1;
+  max-width: none;
+}
+.tokenRow :global(.pf-v6-c-button) {
+  border: 1px solid var(--border-light, #b8bbbe);
+  border-radius: 0 4px 4px 0;
+  height: 42px;
+  flex-shrink: 0;
+  background: white;
+}
+
+/* ── Backend + version side-by-side ── */
+.backendRow  { display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap; }
+.backendField { display: flex; flex-direction: column; gap: 6px; }
+.versionField { display: flex; flex-direction: column; gap: 6px; }
+.versionField .textInput { width: 120px; }
+
+/* ── Backend select ── */
+.selectInput {
+  height: 42px;
+  min-width: 200px;
+  border: 1px solid var(--border-light, #b8bbbe);
+  border-radius: 4px;
+  padding: 7px 12px;
+  font-size: 14px;
+  font-family: var(--sans);
+  background: white;
+  color: var(--gc-text);
+  cursor: pointer;
+  appearance: auto;
+}
+.selectInput:focus {
+  outline: 2px solid var(--gc-link);
+  outline-offset: 1px;
+  border-color: var(--gc-link);
+}
+
+/* ── Helper text & link ── */
+.helperText { font-size: 13px; color: var(--gc-text-3); line-height: 1.4; }
+
+.link {
+  color: var(--gc-link);
+  text-decoration: none;
+  font-size: 13px;
+}
+.link:hover { text-decoration: underline; }

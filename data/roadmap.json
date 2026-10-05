@@ -1,0 +1,17 @@
+{
+  "source": "https://micytao.github.io/rhoai-version-tracker/roadmap.html",
+  "disclaimer": "Forward-looking targets from Red Hat Product Management's Q3 2026 What's New & What's Next deck. Subject to change; not shipped fact.",
+  "targets": [
+    { "componentKeys": ["trustyai"], "category": "Guardrails", "window": "3.6 GA / Q4 2026", "title": "NeMo Guardrails expansion", "detail": "Guardrails integration with AI Gateway/MaaS, Responses and Messages API support, MCP server guardrails, source-app based selection, standalone guardrail runtime with rails catalog." },
+    { "componentKeys": ["trustyai"], "category": "Evaluation", "window": "Q4 2026", "title": "EvalHub GA UI", "detail": "New GA EvalHub UI with Evaluation Gallery, GA adapters (Inspect AI, Garak, LightEval, RAGAS, GuideLLM, IBM CLEAR), sandboxed adversarial evaluations." },
+    { "componentKeys": ["mcplifecycleoperator"], "category": "Agents/MCP", "window": "3.6 GA", "title": "MCP Lifecycle Operator GA", "detail": "MCP Lifecycle, MCP Gateway Operator, and MCP Catalog support-tier labeling all targeted TP -> GA in 3.6." },
+    { "componentKeys": [], "category": "Feature Store / AutoML / AutoRAG", "window": "3.6 GA", "title": "AutoML and AutoRAG reach GA", "detail": "Both promoted TP -> GA targeted for RHAI 3.6." },
+    { "componentKeys": ["kueue"], "category": "Distributed Training", "window": "3.6 / 1H 2027", "title": "Kueue deepening", "detail": "KServe workload preemption (GPU-as-a-Service), org-to-team quota tree UI, Topology Aware Scheduling, per-tenant GPU usage export for showback." },
+    { "componentKeys": ["kserve"], "category": "Model Serving", "window": "3.6 GA", "title": "llm-d enhancements", "detail": "Fast model server startup (reduced cold starts), multi-cluster routing, Rust-based front-end for high-throughput low-latency inference." },
+    { "componentKeys": ["kserve"], "category": "Model Serving", "window": "3.6 Fast 1", "title": "vLLM Omni TP", "detail": "Any-to-any multimodal serving with ~200ms E2E latency voice intelligence, one container for any modality." },
+    { "componentKeys": [], "category": "Platform", "window": "Q4 2026", "title": "AI Gateway Praxis data plane", "detail": "Replaces fragmented Envoy + IPP + shim stacks with one governed hop for MaaS control plane. BREAKING -- plan migration." },
+    { "componentKeys": ["workbenches"], "category": "Platform", "window": "3.6 GA", "title": "Notebooks 2.0 TP", "detail": "WorkspaceKind-based next-gen workbench model. BREAKING change planned -- migration path from Notebooks 1.x being defined." },
+    { "componentKeys": [], "category": "Platform", "window": "3.6 GA", "title": "NVIDIA Vera Rubin accelerator enablement", "detail": "New GPU generation support targeted for 3.6." },
+    { "componentKeys": [], "category": "Platform", "window": "1H 2027", "title": "RHOAI on Hosted Control Planes multi-tenancy", "detail": "Fractional GPU sharing (vGPU/MIG) on HCP-on-Virtualization tenant clusters; per-tenant GPU usage/metering reference architecture." }
+  ]
+}

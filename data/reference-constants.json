@@ -1,0 +1,80 @@
+{
+  "version": "3.5",
+  "source": "OpenShift_AI_3.5_Sizing_Workbook.xlsx (Reference sheet), OpenShift 4.22 docs, RHACS 4.5, RHACM 2.10",
+  "controlPlaneSizingTiers": [
+    { "workersUpTo": 24, "cpuCores": 4, "memoryGB": 16, "cpuCoresOvnK": 4, "memoryGBOvnK": 16 },
+    { "workersUpTo": 120, "cpuCores": 8, "memoryGB": 32, "cpuCoresOvnK": 8, "memoryGBOvnK": 32 },
+    { "workersUpTo": 252, "cpuCores": 16, "memoryGB": 64, "cpuCoresOvnK": 24, "memoryGBOvnK": 128 },
+    { "workersUpTo": 501, "cpuCores": 16, "memoryGB": 96, "cpuCoresOvnK": 16, "memoryGBOvnK": 96 }
+  ],
+  "infraNodeSizingTiers": [
+    { "workersUpTo": 27, "cpuCores": 4, "memoryGB": 24 },
+    { "workersUpTo": 120, "cpuCores": 8, "memoryGB": 48 },
+    { "workersUpTo": 252, "cpuCores": 16, "memoryGB": 128 },
+    { "workersUpTo": 501, "cpuCores": 32, "memoryGB": 128 }
+  ],
+  "prometheusGrowthTiers": [
+    { "nodes": 50, "pods": 1800, "growthPerDayGB": 6.3, "growthPer15DaysGB": 94 },
+    { "nodes": 100, "pods": 3600, "growthPerDayGB": 13.0, "growthPer15DaysGB": 195 },
+    { "nodes": 150, "pods": 5400, "growthPerDayGB": 19.0, "growthPer15DaysGB": 283 },
+    { "nodes": 200, "pods": 7200, "growthPerDayGB": 25.0, "growthPer15DaysGB": 375 }
+  ],
+  "platformConstants": {
+    "controlPlaneNodesPerCluster": 3,
+    "controlPlaneNodeMinVcpu": 4,
+    "controlPlaneNodeMinRamGB": 16,
+    "rhoaiInstallMinWorkerNodes": 2,
+    "rhoaiInstallMinVcpuPerWorker": 8,
+    "rhoaiInstallMinRamPerWorkerGiB": 32,
+    "rhoaiPlatformServicesPlanningAllowanceVcpu": 16,
+    "rhoaiPlatformServicesPlanningAllowanceRamGiB": 64,
+    "distributedWorkloadsControllersVcpu": 1.6,
+    "distributedWorkloadsControllersRamGiB": 2.0,
+    "openshiftMgmtOverheadPerNodeVcpu": 1.0,
+    "openshiftMgmtOverheadPerNodeRamGiB": 1.0,
+    "oauthProxySidecarVcpu": 0.1,
+    "oauthProxySidecarRamGiB": 0.0625,
+    "acmHubReservedVcpu": 6.0,
+    "acmHubReservedRamGB": 12.0,
+    "acmObservabilityS3At10ManagedClustersGiB": 16.2,
+    "acmObservabilityS3At20ManagedClustersGiB": 23.8,
+    "acmObservabilityS3PerManagedClusterGiB": 0.76,
+    "acmObservabilityS3FixedBaseGiB": 8.6,
+    "mirrorRegistryHostVcpu": 2.0,
+    "mirrorRegistryHostRamGB": 8.0,
+    "internalImageRegistryMinStorageGiB": 320.0,
+    "prometheusStoragePerNodePerDayGB": 0.126,
+    "hostRamMultiplierOfTotalGpuMemory": 2.0,
+    "physicalCoresPerGpuCertifiedFloor": 6.0,
+    "physicalCoresPerGpuEnterpriseRA": 7.0,
+    "extraCoresPerGpuForOS": 2.0,
+    "localNvmePerCpuSocketTB": 1.0,
+    "localNvmeMultiplierOfLargestModelArtifact": 2.0,
+    "rhoai35EndOfFullSupport": "2027-03-27",
+    "acsAdmissionControllerReplicas": 3.0,
+    "acsLocalScannerV4DbVolumeGiB": 10.0
+  },
+  "weightBytesPerParameter": {
+    "BF16": 2.0,
+    "FP16": 2.0,
+    "FP8": 1.05,
+    "INT4": 0.56,
+    "NVFP4": 0.56,
+    "MXFP4": 0.56
+  },
+  "gpuSpecifications": [
+    { "gpu": "B300", "memoryGB": 270.0, "hbmBandwidthTBs": 8.0, "denseFp4Pflops": 13.5, "denseFp8Pflops": 4.5, "denseBf16Pflops": 2.25, "powerW": 1100.0, "mig": "No published profiles", "formFactor": "HGX SXM, 8 per node (NVL8)" },
+    { "gpu": "B200", "memoryGB": 180.0, "hbmBandwidthTBs": 8.0, "denseFp4Pflops": 9.0, "denseFp8Pflops": 4.5, "denseBf16Pflops": 2.25, "powerW": 1000.0, "mig": "Up to 7", "formFactor": "HGX SXM, 8 per node" },
+    { "gpu": "H200 NVL", "memoryGB": 141.0, "hbmBandwidthTBs": 4.8, "denseFp4Pflops": 0.0, "denseFp8Pflops": 1.671, "denseBf16Pflops": 0.836, "powerW": 600.0, "mig": "7x1g.18gb .. 1x7g.141gb", "formFactor": "PCIe with NVLink bridge pairs (NVL2)", "notes": "No FP4 hardware: NVFP4 checkpoints run weight-only (W4A16) at BF16 compute speed." },
+    { "gpu": "H100 NVL", "memoryGB": 94.0, "hbmBandwidthTBs": 3.9, "denseFp4Pflops": 0.0, "denseFp8Pflops": 1.671, "denseBf16Pflops": 0.836, "powerW": 400.0, "mig": "Up to 7", "formFactor": "PCIe with NVLink bridge pairs (NVL2)" }
+  ],
+  "efficiencyAssumptions": {
+    "hbmBandwidthEfficiencyDecode": 0.65,
+    "fixedOverheadPerDecodeStepSec": 0.003,
+    "mfuDecodeWeightMaths": 0.30,
+    "mfuPrefillWeightMaths": 0.35,
+    "attentionKernelEfficiencyBf16": 0.50,
+    "vllmGpuMemoryUtilization": 0.90,
+    "fixedTtftOverheadSec": 0.30
+  }
+}

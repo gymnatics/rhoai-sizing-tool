@@ -1,0 +1,328 @@
+{
+  "version": "3.5",
+  "source": "OpenShift_AI_3.5_Sizing_Workbook.xlsx (Components sheet) + RHOAI Version Tracker",
+  "platformOverheadLineItems": [
+    {
+      "key": "rhoai_controllers",
+      "label": "RHOAI controllers (Dashboard, KServe controller, Model Registry, MLflow)",
+      "vcpu": 4.18,
+      "ramGiB": 6.74,
+      "gatedBy": "always",
+      "notes": "Core operator reconciler loops. Always running regardless of which DataScienceCluster components are enabled."
+    },
+    {
+      "key": "openshift_platform_services",
+      "label": "OpenShift platform services (ingress, monitoring, logging/Loki, OADP)",
+      "vcpu": 8,
+      "ramGiB": 24,
+      "gatedBy": "always",
+      "notes": "Cluster-wide platform overhead, not specific to RHOAI, but required on every cluster RHOAI runs on."
+    },
+    {
+      "key": "node_feature_discovery_stack",
+      "label": "Node Feature Discovery, GPU Operator daemonsets, cert-manager, Connectivity Link, Authorino, Limitador",
+      "vcpu": 3,
+      "ramGiB": 6,
+      "gatedBy": "anyGpu",
+      "notes": "Required whenever any GPU hardware (existing or planned) is present on the cluster."
+    },
+    {
+      "key": "ai_gateway_and_dbs",
+      "label": "AI Gateway / MaaS + Model Registry/MLflow databases",
+      "vcpu": 3,
+      "ramGiB": 8,
+      "gatedBy": ["maas", "modelregistry", "mlflowoperator"],
+      "notes": "Gateway control plane (when MaaS is enabled) plus the backing PostgreSQL instances for Model Registry and/or MLflow."
+    },
+    {
+      "key": "aipipelines_controller",
+      "label": "AI Pipelines controller (Kubeflow Pipelines + Argo Workflows)",
+      "vcpu": 4,
+      "ramGiB": 12,
+      "gatedBy": ["aipipelines"],
+      "scalesWithConcurrentPipelineRuns": true,
+      "notes": "Base controller footprint for 1 concurrent pipeline run; add roughly 1 vCPU / 3 GiB per additional concurrent run configured on Step 4."
+    },
+    {
+      "key": "cluster_observability_operator",
+      "label": "Cluster Observability Operator (llm-d dashboards)",
+      "vcpu": 2,
+      "ramGiB": 6,
+      "gatedBy": ["kserve"],
+      "notes": "Recommended for llm-d distributed-inference dashboards; gated on KServe being enabled."
+    },
+    {
+      "key": "kueue_controller",
+      "label": "Kueue controller",
+      "vcpu": 1.6,
+      "ramGiB": 2,
+      "gatedBy": ["kueue"],
+      "notes": null
+    },
+    {
+      "key": "llmd_inference_scheduler_gateway",
+      "label": "llm-d inference scheduler + gateway (EPP + inference gateway)",
+      "vcpu": 4,
+      "ramGiB": 8,
+      "gatedBy": ["kserve"],
+      "notes": "Endpoint Picker (EPP) and inference gateway control path for KServe's distributed inference with llm-d."
+    }
+  ],
+  "dscComponents": [
+    {
+      "key": "dashboard",
+      "label": "Dashboard",
+      "capability": "Web UI",
+      "status": "GA",
+      "defaultEnabled": true,
+      "scope": "cluster",
+      "prerequisites": [],
+      "database": null,
+      "notes": "Core web console. Always enabled in practice."
+    },
+    {
+      "key": "workbenches",
+      "label": "Workbenches",
+      "capability": "Notebook controller (Jupyter/Code Server/RStudio workbench pods are sized on the Workloads step)",
+      "status": "GA",
+      "defaultEnabled": true,
+      "scope": "cluster",
+      "prerequisites": [],
+      "database": null,
+      "notes": "RStudio Server workbench image removed at 3.5 for AGPL licensing; self-build recipes exist unsupported."
+    },
+    {
+      "key": "aipipelines",
+      "label": "AI Pipelines",
+      "capability": "Kubeflow Pipelines + Argo Workflows",
+      "status": "GA",
+      "defaultEnabled": true,
+      "scope": "cluster",
+      "prerequisites": ["S3-compatible object storage"],
+      "database": { "type": "MariaDB/MySQL", "note": "PostgreSQL on roadmap, not yet default" },
+      "notes": null
+    },
+    {
+      "key": "kserve",
+      "label": "KServe (Model Serving)",
+      "capability": "Model serving incl. Distributed Inference with llm-d",
+      "status": "GA",
+      "statusDetail": "llm-d 0.10.0 GA on OpenShift/AKS/CKS; EKS is TP",
+      "defaultEnabled": true,
+      "scope": "cluster",
+      "prerequisites": ["cert-manager"],
+      "llmdPrerequisites": ["Red Hat Connectivity Link", "Leader Worker Set Operator", "OpenShift 4.22+"],
+      "database": null,
+      "notes": "RawDeployment mode only; Serverless and ModelMesh are removed/retired."
+    },
+    {
+      "key": "maas",
+      "label": "AI Gateway / MaaS (Models-as-a-Service)",
+      "capability": "Model-as-a-Service gateway: metering, API-key auth, rate limiting, usage-based access to served models",
+      "status": "Technology Preview",
+      "defaultEnabled": false,
+      "scope": "cluster",
+      "prerequisites": ["Red Hat Connectivity Link"],
+      "database": { "type": "PostgreSQL (gateway policy/usage store)" },
+      "notes": "Fronts KServe-served models with Red Hat Connectivity Link (Kuadrant: Authorino + Limitador) for auth, rate limiting and usage metering. TP per RHOAI Version Tracker."
+    },
+    {
+      "key": "kueue",
+      "label": "Kueue",
+      "capability": "Workload queues and quotas",
+      "status": "GA",
+      "statusDetail": "via Red Hat build of Kueue Operator",
+      "defaultEnabled": true,
+      "scope": "cluster",
+      "prerequisites": ["Red Hat build of Kueue Operator", "cert-manager"],
+      "database": null,
+      "notes": "New at 3.5 GA: boolean flag to self-manage ClusterQueues/LocalQueues (disabled by default)."
+    },
+    {
+      "key": "ray",
+      "label": "Ray (KubeRay)",
+      "capability": "KubeRay distributed compute",
+      "status": "GA",
+      "statusDetail": "Source conflict: release notes say 1.6.x, Supported Configurations matrix lists 1.4.2 (GA x86_64/Arm, TP Power, unavailable Z)",
+      "defaultEnabled": false,
+      "scope": "cluster",
+      "prerequisites": ["Red Hat build of Kueue Operator", "cert-manager"],
+      "database": null,
+      "notes": null
+    },
+    {
+      "key": "trainer",
+      "label": "Kubeflow Trainer v2",
+      "capability": "TrainJob / TrainingRuntime API",
+      "status": "GA",
+      "statusDetail": "GA on x86_64 and Arm only; unavailable on IBM Power/Z",
+      "defaultEnabled": false,
+      "scope": "cluster",
+      "prerequisites": ["JobSet Operator"],
+      "database": null,
+      "notes": "Training Hub (SFT, OSFT, LoRA, GRPO) can run on Trainer v2 or Ray clusters."
+    },
+    {
+      "key": "trainingoperator",
+      "label": "Kubeflow Training Operator v1",
+      "capability": "Legacy training operator (replaced by Trainer v2)",
+      "status": "Deprecated",
+      "eusExceptionDate": "2027-03-27",
+      "defaultEnabled": false,
+      "scope": "cluster",
+      "prerequisites": ["Red Hat build of Kueue Operator", "cert-manager"],
+      "database": null,
+      "notes": "Deprecated since 2.25. EUS exception: supported only through 3.5 Full Support, EOL 27 Mar 2027. Migrate to Trainer v2."
+    },
+    {
+      "key": "feastoperator",
+      "label": "Feature Store (Feast)",
+      "capability": "Feature Store",
+      "status": "GA",
+      "statusDetail": "GA on x86_64/Arm, TP on IBM Power, unavailable on IBM Z",
+      "defaultEnabled": false,
+      "scope": "cluster",
+      "prerequisites": [],
+      "database": { "type": "Redis/Valkey or PostgreSQL" },
+      "notes": "3.5 adds SparkApplication batch materialization engine and bidirectional workbench visibility."
+    },
+    {
+      "key": "modelregistry",
+      "label": "Model Registry",
+      "capability": "Model registry operator + catalog",
+      "status": "GA",
+      "defaultEnabled": true,
+      "scope": "cluster",
+      "prerequisites": [],
+      "database": { "type": "MySQL 5.x+/8.x or PostgreSQL (in-cluster default: 5Gi PVC)", "note": "CORRECTION vs older docs which cited external MySQL as mandatory; a live 3.5 cluster defaults to in-cluster PostgreSQL" },
+      "objectStorage": true,
+      "notes": "3.4 added OCI-compliant storage layer (ModelCar images). 3.5 EA2 adds Safety/Security Insights tab, cold-start/vRAM metrics."
+    },
+    {
+      "key": "trustyai",
+      "label": "TrustyAI / Guardrails / EvalHub",
+      "capability": "TrustyAI, NeMo Guardrails, EvalHub",
+      "status": "GA",
+      "statusDetail": "SOURCE CONFLICT: 3.5 release notes call EvalHub GA with full support; Supported Configurations matrix lists EvalHub 0.3.0 as TP on x86_64 only",
+      "defaultEnabled": true,
+      "scope": "cluster",
+      "prerequisites": [],
+      "database": { "type": "PostgreSQL", "note": "EvalHub local dev mode can run outside Kubernetes" },
+      "notes": "FMS-Guardrails Orchestrator is deprecated (3.5), targeted for removal in 3.6. NeMo Guardrails is the recommended path."
+    },
+    {
+      "key": "mlflowoperator",
+      "label": "MLflow",
+      "capability": "MLflow experiment tracking",
+      "status": "GA",
+      "defaultEnabled": true,
+      "scope": "cluster",
+      "prerequisites": ["PostgreSQL", "S3 (trace archival)"],
+      "database": { "type": "PostgreSQL (SQLite for dev/test only)" },
+      "objectStorage": true,
+      "notes": "3.5: embedded into AI Pipelines, workbenches, Kubeflow SDK/Trainer, AI Hub. Age-based trace archival to S3. EvalCard generation for EvalHub runs."
+    },
+    {
+      "key": "ogx",
+      "label": "OGX (formerly Llama Stack)",
+      "capability": "RAG, agentic workflows, vector DB integration",
+      "status": "GA",
+      "eusExceptionDate": "2027-03-27",
+      "statusDetail": "SOURCE CONFLICT: Supported Configurations matrix lists OGX Operator/OGX as GA on x86_64/Arm/Power; the OGX product guide labels the OpenShift AI integration Technology Preview. Individual APIs/providers range GA/TP/DP.",
+      "defaultEnabled": false,
+      "scope": "cluster",
+      "prerequisites": ["OGX Operator", "cert-manager", "NFD", "NVIDIA GPU Operator", "S3 object storage", "PostgreSQL Operator"],
+      "database": { "type": "PostgreSQL (required for production; SQLite dev/test only)" },
+      "objectStorage": true,
+      "notes": "Renamed from Llama Stack at 3.5 EA1 (breaking manual migration). NO Service Mesh operator required on a live 3.5 cluster (correction vs older docs)."
+    },
+    {
+      "key": "mcplifecycleoperator",
+      "label": "MCP Lifecycle Operator",
+      "capability": "MCP server deployment/management",
+      "status": "Technology Preview",
+      "defaultEnabled": false,
+      "scope": "cluster",
+      "prerequisites": [],
+      "database": null,
+      "notes": "Defaults to Removed in DataScienceCluster; must be explicitly set to Managed. mcpCatalog dashboard flag must also be enabled. Roadmap target: GA in 3.6."
+    }
+  ],
+  "perProjectInstances": [
+    {
+      "key": "pipeline_server",
+      "label": "Pipeline server",
+      "createdBy": "aipipelines",
+      "defaultEnabled": true,
+      "instancesPerProject": 1,
+      "notes": "One per project that runs pipelines. API server + persistence agent + database pods."
+    },
+    {
+      "key": "mlflow_server",
+      "label": "MLflow server",
+      "createdBy": "mlflowoperator",
+      "defaultEnabled": true,
+      "instancesPerProject": 1,
+      "notes": "RHOAI 3.5: training/pipeline runs log to a dedicated MLflow server in the project; needs PostgreSQL + S3."
+    },
+    {
+      "key": "ogx_server",
+      "label": "OGX server",
+      "createdBy": "ogx",
+      "defaultEnabled": false,
+      "instancesPerProject": 1,
+      "cpuPerInstance": 0.25,
+      "ramPerInstanceGiB": 0.488,
+      "notes": "Requests from RHOAI 3.4 Llama Stack docs (secondary source); limits 4 CPU / 12 GiB. Verify."
+    },
+    {
+      "key": "ogx_postgresql",
+      "label": "PostgreSQL for OGX",
+      "createdBy": "ogx",
+      "defaultEnabled": false,
+      "instancesPerProject": 1,
+      "volumePerInstanceGiB": 10,
+      "notes": "Production OGX requires PostgreSQL (SQLite is dev/test only)."
+    },
+    {
+      "key": "modelregistry_instance",
+      "label": "Model registry instance",
+      "createdBy": "modelregistry",
+      "defaultEnabled": true,
+      "instancesPerProject": 0.1,
+      "notes": "Example: one registry shared by 10 projects = 0.1 per project."
+    },
+    {
+      "key": "trustyai_guardrails",
+      "label": "TrustyAI / guardrails per project",
+      "createdBy": "trustyai",
+      "defaultEnabled": true,
+      "instancesPerProject": 1,
+      "notes": "NeMo Guardrails server + monitoring pods. Guardrail MODELS are sized on the use-case step, not here."
+    },
+    {
+      "key": "evalhub_tenant",
+      "label": "EvalHub per-tenant instance",
+      "createdBy": "trustyai",
+      "defaultEnabled": false,
+      "instancesPerProject": 1,
+      "notes": "Optional. Red Hat recommends the shared multi-tenant EvalHub for most organizations."
+    }
+  ],
+  "dependentOperators": [
+    { "key": "cert-manager", "neededWhen": ["kserve", "kueue", "ray", "ogx"], "status": "Required", "scope": "per_cluster" },
+    { "key": "rhbok", "label": "Red Hat build of Kueue", "neededWhen": ["kueue", "ray", "trainingoperator"], "status": "Required", "scope": "per_cluster" },
+    { "key": "jobset", "label": "JobSet Operator", "neededWhen": ["trainer"], "status": "Required", "scope": "per_cluster" },
+    { "key": "lws", "label": "Leader Worker Set Operator", "neededWhen": ["llm-d"], "status": "Required", "scope": "per_cluster" },
+    { "key": "rhcl", "label": "Red Hat Connectivity Link", "neededWhen": ["llm-d", "maas"], "status": "Required", "scope": "per_cluster", "notes": "Included in Red Hat AI subscriptions for MaaS use only; confirm entitlement for llm-d-without-MaaS." },
+    { "key": "servicemesh", "label": "Service Mesh 3.x", "neededWhen": [], "status": "Not needed", "scope": "per_cluster", "notes": "Older docs listed this as an OGX prerequisite; a live 3.5 cluster runs OGX with no Service Mesh operator installed." },
+    { "key": "postgresql-operator", "label": "PostgreSQL Operator", "neededWhen": ["ogx (if OGX PostgreSQL is self-managed rather than external)"], "status": "Conditional", "scope": "per_cluster" },
+    { "key": "metallb", "label": "MetalLB (LoadBalancer)", "neededWhen": ["llm-d on bare metal"], "status": "Required", "scope": "per_cluster" },
+    { "key": "coo", "label": "Cluster Observability Operator", "neededWhen": ["llm-d dashboards"], "status": "Recommended", "scope": "per_cluster" },
+    { "key": "keda", "label": "Custom Metrics Autoscaler (KEDA)", "neededWhen": ["metrics-based autoscaling"], "status": "Optional", "scope": "per_cluster" },
+    { "key": "nfd", "label": "Node Feature Discovery", "neededWhen": ["GPU nodes"], "status": "Required", "scope": "per_gpu_node" },
+    { "key": "gpu-operator", "label": "NVIDIA GPU Operator", "neededWhen": ["GPU nodes"], "status": "Required", "scope": "per_gpu_node" },
+    { "key": "sriov", "label": "SR-IOV Network Operator", "neededWhen": ["RDMA fabric"], "status": "Conditional", "scope": "per_gpu_node" },
+    { "key": "nvidia-network-operator", "label": "NVIDIA Network Operator", "neededWhen": ["RDMA fabric"], "status": "Conditional", "scope": "per_gpu_node" }
+  ]
+}

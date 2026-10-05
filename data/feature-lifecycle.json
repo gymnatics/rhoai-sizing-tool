@@ -1,0 +1,260 @@
+{
+  "source": "https://micytao.github.io/rhoai-version-tracker/matrix.html",
+  "versions": ["2.19", "2.24", "2.25", "3.0", "3.2", "3.3", "3.4", "3.5", "3.6 planned"],
+  "features": [
+    {
+      "id": "ogx-core",
+      "componentKeys": ["ogx"],
+      "name": "OGX (Open GenAI Stack) core: RAG, agentic workflows, vector DB integration",
+      "currentStatus": "GA",
+      "riskColor": "amber",
+      "history": [
+        { "version": "3.0", "status": "TP", "detail": "Introduced as Technology Preview (distribution ~0.2.22-class). Remote inference, built-in embeddings, vector DB operations, TrustyAI safety/eval integration." },
+        { "version": "3.2", "status": "Change", "detail": "PostgreSQL Operator became a hard requirement. Distribution 0.3.5. HA configuration and custom embeddings added as TP sub-features." },
+        { "version": "3.3", "status": "TP", "detail": "Distribution 0.4.2. Multi-architecture Operator support became default. OpenAI-compatible citation annotations added as TP." },
+        { "version": "3.4", "status": "TP", "detail": "Llama Stack Operator remains Technology Preview in the formal 3.4 support matrix (0.9.0, TP on x86_64/Arm/Power, unavailable IBM Z)." },
+        { "version": "3.5", "status": "GA", "detail": "Renamed to OGX at 3.5 EA1 (breaking manual migration). At 3.5 GA: Supported Configurations lists OGX Operator 0.11.0 / OGX 1.1.2 as GA on x86_64/Arm/Power, while the OGX product guide labels the OpenShift AI integration Technology Preview. Responses API is GA; most others TP/DP." }
+      ]
+    },
+    {
+      "id": "ogx-sqlite",
+      "componentKeys": ["ogx"],
+      "name": "SQLite as OGX metadata store",
+      "currentStatus": "Deprecated",
+      "riskColor": "amber",
+      "history": [
+        { "version": "3.0", "status": "GA", "detail": "Default and only metadata store option (3.0-3.1)." },
+        { "version": "3.2", "status": "Deprecated", "detail": "Deprecated for production use specifically. PostgreSQL required for production-grade environments." },
+        { "version": "3.5", "status": "Deprecated", "detail": "Unchanged through 3.5 GA: SQLite remains available only for local dev/testing; PostgreSQL required for production." }
+      ]
+    },
+    {
+      "id": "fms-guardrails",
+      "componentKeys": ["trustyai"],
+      "name": "FMS-Guardrails Orchestrator (via TrustyAI)",
+      "currentStatus": "Deprecated",
+      "riskColor": "red",
+      "history": [
+        { "version": "2.19", "status": "TP", "detail": "Introduced via the TrustyAI Operator, built on IBM Research's fms-guardrails-orchestrator project." },
+        { "version": "3.0", "status": "GA", "detail": "Core described as generally available through 3.4. The 3.4 safety guide labels it legacy, to be deprecated in a future release." },
+        { "version": "3.5", "status": "Deprecated", "detail": "Directly confirmed in 3.5 release notes Chapter 5: deprecated, remains functional, will be removed in a future release. NeMo Guardrails is now the single recommended framework." },
+        { "version": "3.6 planned", "status": "Removed", "detail": "Removal targeted for Q4 2026 (RHAI 3.6)." }
+      ]
+    },
+    {
+      "id": "nemo-guardrails",
+      "componentKeys": ["trustyai"],
+      "name": "NeMo Guardrails",
+      "currentStatus": "GA",
+      "riskColor": "amber",
+      "history": [
+        { "version": "3.2", "status": "TP", "detail": "Introduced as Technology Preview." },
+        { "version": "3.3", "status": "TP", "detail": "Remained TP, documentation compares it against FMS-Guardrails as a parallel competing path." },
+        { "version": "3.4", "status": "GA", "detail": "Fully supported. Adds standalone /v1/guardrails/checks endpoint, OpenAI-compatible /v1/models/ endpoint, regex-based rails, multi-replica scaling." },
+        { "version": "3.5", "status": "GA", "detail": "Core GA on x86_64 and IBM Power. Release notes announce IBM Z support but current matrix does not list it on s390x -- source conflict." }
+      ]
+    },
+    {
+      "id": "mlflow",
+      "componentKeys": ["mlflowoperator"],
+      "name": "MLflow experiment tracking / MLOps integration",
+      "currentStatus": "GA",
+      "riskColor": "green",
+      "history": [
+        { "version": "3.2", "status": "DP", "detail": "Introduced as Developer Preview." },
+        { "version": "3.3", "status": "TP", "detail": "Promoted to Technology Preview." },
+        { "version": "3.4", "status": "GA", "detail": "Fully supported. MLflow Operator became a managed component in the DataScienceCluster CR." },
+        { "version": "3.5", "status": "GA", "detail": "Scope substantially widened: embedded into AI Pipelines, workbenches, Kubeflow SDK/Trainer, AI Hub. Age-based trace archival to S3. EvalCard generation." }
+      ]
+    },
+    {
+      "id": "evalhub",
+      "componentKeys": ["trustyai"],
+      "name": "Evaluation Stack -> EvalHub",
+      "currentStatus": "TP",
+      "riskColor": "amber",
+      "history": [
+        { "version": "3.4", "status": "TP", "detail": "Evaluation Stack UI: Technology Preview. Underlying REST orchestration control plane: Developer Preview." },
+        { "version": "3.5", "status": "GA in release notes / TP in matrix", "detail": "3.5 GA release notes state EvalHub is GA with full support. Current Supported Configurations matrix lists EvalHub 0.3.0 as TP on x86_64, unavailable elsewhere. This registry follows the matrix." },
+        { "version": "3.6 planned", "status": "GA", "detail": "New GA EvalHub UI with Evaluation Gallery; GA adapters for Inspect AI, Garak, LightEval, RAGAS, GuideLLM, IBM CLEAR." }
+      ]
+    },
+    {
+      "id": "kubeflow-trainer-v2",
+      "componentKeys": ["trainer"],
+      "name": "Kubeflow Trainer v2 (replacing Training Operator v1)",
+      "currentStatus": "GA",
+      "riskColor": "green",
+      "history": [
+        { "version": "2.25", "status": "Deprecated", "detail": "Kubeflow Training Operator v1 marked deprecated; transition to Trainer v2 announced." },
+        { "version": "3.2", "status": "TP", "detail": "Kubeflow Trainer v2 introduced as Technology Preview." },
+        { "version": "3.4", "status": "GA", "detail": "GA on x86_64 and Arm; unavailable on IBM Power and IBM Z." },
+        { "version": "3.5", "status": "GA", "detail": "Remains GA on x86_64/Arm. Training Hub fine-tuning algorithms (SFT, OSFT, LoRA, GRPO) can run on Ray clusters." }
+      ]
+    },
+    {
+      "id": "kueue",
+      "componentKeys": ["kueue"],
+      "name": "Kueue (embedded component -> Red Hat build of Kueue Operator)",
+      "currentStatus": "GA",
+      "riskColor": "green",
+      "history": [
+        { "version": "2.24", "status": "Deprecated", "detail": "Embedded Kueue component marked deprecated." },
+        { "version": "3.0", "status": "Removed", "detail": "Embedded component removed; replaced by standalone Red Hat build of Kueue Operator." },
+        { "version": "3.5", "status": "GA", "detail": "New at 3.5 GA: administrators can self-manage ClusterQueues/LocalQueues via a boolean flag, disabled by default." }
+      ]
+    },
+    {
+      "id": "kuberay",
+      "componentKeys": ["ray"],
+      "name": "KubeRay (CodeFlare Operator successor)",
+      "currentStatus": "GA",
+      "riskColor": "amber",
+      "history": [
+        { "version": "2.24", "status": "Deprecated", "detail": "CodeFlare Operator marked deprecated." },
+        { "version": "3.0", "status": "Removed", "detail": "CodeFlare Operator removed outright; functionality folded into KubeRay Operator." },
+        { "version": "3.5", "status": "GA", "detail": "Live source conflict: 3.5 release notes say upgraded to 1.6.x; matrix lists KubeRay 1.4.2 (GA x86_64/Arm, TP Power, unavailable Z)." }
+      ]
+    },
+    {
+      "id": "kserve-serverless",
+      "componentKeys": ["kserve"],
+      "name": "KServe Serverless deployment mode",
+      "currentStatus": "Removed",
+      "riskColor": "red",
+      "history": [
+        { "version": "2.25", "status": "Deprecated", "detail": "Marked deprecated." },
+        { "version": "3.0", "status": "Change", "detail": "Architecture consolidated onto KServe RawDeployment mode. Unmigrated workloads return HTTP 503." },
+        { "version": "3.5", "status": "Removed", "detail": "Retired from the supported 3.x serving architecture. New at 3.5 GA: canary rollout support for RawDeployment InferenceServices." }
+      ]
+    },
+    {
+      "id": "modelmesh",
+      "componentKeys": ["kserve"],
+      "name": "Multi-model serving platform (ModelMesh)",
+      "currentStatus": "Removed",
+      "riskColor": "red",
+      "history": [
+        { "version": "2.19", "status": "Deprecated", "detail": "Marked deprecated." },
+        { "version": "3.0", "status": "Change", "detail": "Architecture consolidated onto KServe RawDeployment mode." },
+        { "version": "3.5", "status": "Removed", "detail": "Retired from the supported 3.x serving architecture." }
+      ]
+    },
+    {
+      "id": "llm-d-core",
+      "componentKeys": ["kserve"],
+      "name": "Distributed Inference with llm-d (core)",
+      "currentStatus": "GA",
+      "riskColor": "amber",
+      "history": [
+        { "version": "2.25", "status": "DP", "detail": "Introduced as Developer Preview." },
+        { "version": "3.4", "status": "GA", "detail": "GA on x86_64 and aarch64 (0.7.1). Requires OpenShift 4.20+; unavailable on IBM Power/Z." },
+        { "version": "3.5", "status": "GA", "detail": "GA extended to Azure Kubernetes Service (AKS) and CoreWeave Kubernetes Service (CKS); Amazon EKS added as TP. Istio is now the supported gateway. Tokenizer now runs as dedicated external service requiring amd64 node." }
+      ]
+    },
+    {
+      "id": "flow-control-llmd",
+      "componentKeys": ["kserve"],
+      "name": "Distributed Inference with llm-d: priority-based flow control",
+      "currentStatus": "GA",
+      "riskColor": "red",
+      "history": [
+        { "version": "3.4", "status": "TP", "detail": "Technology Preview flow control for Distributed Inference with llm-d." },
+        { "version": "3.5", "status": "GA", "detail": "Breaking change on promotion: TP (3.4) -> GA (3.5) while changing API group (inference.networking.x-k8s.io -> llm-d.ai), metrics prefix, and saturation-detector config path. Anyone who configured flow control during 3.4 TP has mandatory remediation work." }
+      ]
+    },
+    {
+      "id": "feature-store",
+      "componentKeys": ["feastoperator"],
+      "name": "Feature Store (Feast-based)",
+      "currentStatus": "GA",
+      "riskColor": "green",
+      "history": [
+        { "version": "3.4", "status": "GA", "detail": "Core GA on x86_64/Arm, TP on IBM Power, unavailable on IBM Z." },
+        { "version": "3.5", "status": "GA", "detail": "Adds SparkApplication batch materialization engine and bidirectional workbench/Feature Store visibility. Does not promote the Power implementation beyond TP." }
+      ]
+    },
+    {
+      "id": "model-registry-catalog",
+      "componentKeys": ["modelregistry"],
+      "name": "Model registry and model catalog",
+      "currentStatus": "GA",
+      "riskColor": "green",
+      "history": [
+        { "version": "3.0", "status": "GA", "detail": "Added IBM Power (ppc64le) and IBM Z (s390x) architecture support." },
+        { "version": "3.4", "status": "GA", "detail": "New capability: OCI-compliant storage layer, converting registered models to ModelCar OCI images." },
+        { "version": "3.5", "status": "GA", "detail": "Catalog enrichment: Safety and Security Insights tab, cold-start load time and minimum vRAM metrics, validated tool-calling arguments panel." }
+      ]
+    },
+    {
+      "id": "mcp-lifecycle-operator",
+      "componentKeys": ["mcplifecycleoperator"],
+      "name": "MCP Lifecycle Operator",
+      "currentStatus": "TP",
+      "riskColor": "amber",
+      "history": [
+        { "version": "3.5", "status": "TP", "detail": "Kubernetes-native operator for deploying/managing MCP servers. Defaults to Removed in DataScienceCluster; must be explicitly set to Managed." },
+        { "version": "3.6 planned", "status": "GA", "detail": "MCP Lifecycle promoted TP -> GA targeted in RHAI 3.6." }
+      ]
+    },
+    {
+      "id": "automl",
+      "componentKeys": [],
+      "name": "AutoML",
+      "currentStatus": "TP",
+      "riskColor": "amber",
+      "history": [
+        { "version": "3.4", "status": "TP", "detail": "Technology Preview (EA2 also used Developer Preview wording)." },
+        { "version": "3.5", "status": "TP", "detail": "Remains TP on x86_64 and IBM Power, unavailable on Arm and IBM Z. Adds model-insight curves/backtesting, TP AutoGluon serving runtime." },
+        { "version": "3.6 planned", "status": "GA", "detail": "AutoML promoted TP -> GA targeted for RHAI 3.6." }
+      ]
+    },
+    {
+      "id": "autorag",
+      "componentKeys": [],
+      "name": "AutoRAG",
+      "currentStatus": "TP",
+      "riskColor": "amber",
+      "history": [
+        { "version": "3.4", "status": "TP", "detail": "Technology Preview (EA2 also used Developer Preview wording)." },
+        { "version": "3.5", "status": "TP", "detail": "Remains TP on x86_64; unavailable on Arm/Power/Z. Adds CPU-only deployment, multilingual support, structural contextualization." },
+        { "version": "3.6 planned", "status": "GA", "detail": "AutoRAG promoted TP -> GA targeted for RHAI 3.6." }
+      ]
+    },
+    {
+      "id": "maas-core",
+      "componentKeys": [],
+      "name": "Models-as-a-Service (MaaS) core: access model and token mechanism",
+      "currentStatus": "GA",
+      "riskColor": "amber",
+      "history": [
+        { "version": "3.3", "status": "TP", "detail": "Introduced as Technology Preview. Tier-based governance; MaaS-issued service-account-backed token." },
+        { "version": "3.4", "status": "GA", "detail": "Reached GA. Tiers replaced by subscriptions and dedicated CRs (MaaSSubscription, MaaSAuthPolicy, MaaSModelRef). NOT backward compatible with 3.3 -- amber TP-to-GA migration break." },
+        { "version": "3.5", "status": "GA", "detail": "GA core expanded: external OIDC authentication reaches GA, OpenAI-compatible body-based model routing reaches GA, Subscriptions+Authorization pages merge into one MaaS governance page." }
+      ]
+    },
+    {
+      "id": "vllm-kserve-runtime",
+      "componentKeys": ["kserve"],
+      "name": "vLLM ServingRuntime for KServe",
+      "currentStatus": "GA",
+      "riskColor": "green",
+      "history": [
+        { "version": "3.0", "status": "GA", "detail": "Classic ServingRuntime + InferenceService path. Core supported runtime." },
+        { "version": "3.5", "status": "GA", "detail": "Remains GA. Foundational vLLM GA status does not extend to every vLLM-adjacent delivery path (MaaS deployment, LLMInferenceService, fast-release images are each separate maturity surfaces)." }
+      ]
+    },
+    {
+      "id": "gateway-api-rhcl",
+      "componentKeys": ["kserve"],
+      "name": "Gateway API and Red Hat Connectivity Link (RHCL)",
+      "currentStatus": "GA",
+      "riskColor": "amber",
+      "history": [
+        { "version": "3.0", "status": "Change", "detail": "Gateway API replacing OpenShift Routes, kube-rbac-proxy replacing oauth-proxy -- core architecture shift. Custom workbench images built against oauth-proxy require rebuilding." },
+        { "version": "3.4", "status": "GA", "detail": "Direct OIDC auth via GatewayConfig CR reaches GA. RHCL included in Red Hat AI SKUs for MaaS use cases only; not included for other components." },
+        { "version": "3.5", "status": "GA", "detail": "New known issue on RHCL 1.4.0/1.4.1: rate limiting silently stops working on batch gateway deployments (RHOAIENG-76586); recommend RHCL 1.3.5 for batch gateways." }
+      ]
+    }
+  ]
+}
