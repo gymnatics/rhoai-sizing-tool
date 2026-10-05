@@ -51,9 +51,18 @@ const CARDS: ModeCard[] = [
 
 export default function WizardLandingPage() {
   const router = useRouter();
-  const { setWizardMode } = useWizard();
+  const { hydrated, state, setWizardMode, reset } = useWizard();
+
+  const hasExistingData =
+    state.sizedModels.length > 0 || state.useCases.length > 0 || !!state.customer.name;
 
   const choose = (card: ModeCard) => {
+    setWizardMode(card.mode);
+    router.push(card.href);
+  };
+
+  const startFresh = (card: ModeCard) => {
+    reset();
     setWizardMode(card.mode);
     router.push(card.href);
   };
@@ -70,25 +79,58 @@ export default function WizardLandingPage() {
           </p>
         </div>
 
+        {/* ─── Resume existing session ─── */}
+        {hydrated && hasExistingData && (
+          <div className={styles.card} style={{ borderColor: '#0066cc', background: '#f0f7ff', marginBottom: 24 }}>
+            <div className={styles.cardTitle}>Continue previous sizing?</div>
+            <div className={styles.cardSubtitle} style={{ marginBottom: 0 }}>
+              You have an in-progress sizing
+              {state.customer.name ? <> for <strong>{state.customer.name}</strong></> : null}
+              {' '}with {state.sizedModels.length} model{state.sizedModels.length !== 1 ? 's' : ''}
+              {state.useCases.length > 0 ? ` and ${state.useCases.length} use case${state.useCases.length !== 1 ? 's' : ''}` : ''}.
+            </div>
+            <div style={{ display: 'flex', gap: 12, marginTop: 16 }}>
+              <button type="button" className={styles.btnPrimary} onClick={() => {
+                const href = state.wizardMode === 'llm-only' ? '/recommend' : '/wizard/step1';
+                setWizardMode(state.wizardMode ?? 'full');
+                router.push(href);
+              }}>
+                Continue →
+              </button>
+              <button type="button" className={styles.btnSecondary} onClick={() => {
+                if (window.confirm('This will clear all customer info, sized models, use cases, and platform settings. Continue?')) {
+                  reset();
+                }
+              }}>
+                Clear and start new
+              </button>
+            </div>
+          </div>
+        )}
+
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
           {CARDS.map(card => (
             <div
               key={card.mode}
               className={styles.card}
-              role="button"
-              tabIndex={0}
-              onClick={() => choose(card)}
-              onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); choose(card); } }}
-              style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', minHeight: 320, transition: 'box-shadow 0.15s, border-color 0.15s' }}
+              style={{ display: 'flex', flexDirection: 'column', minHeight: 320 }}
             >
               <div className={styles.cardTitle} style={{ fontSize: 20 }}>{card.title}</div>
               <p style={{ fontSize: 14, color: '#3c3f42', lineHeight: 1.6, marginTop: 8 }}>{card.description}</p>
               <ul style={{ margin: '12px 0 0', paddingLeft: 18, fontSize: 13.5, color: '#54585c', lineHeight: 1.8, flexGrow: 1 }}>
                 {card.bullets.map(b => <li key={b}>{b}</li>)}
               </ul>
-              <button type="button" className={styles.btnPrimary} style={{ marginTop: 20, alignSelf: 'flex-start' }}>
-                {card.cta}
-              </button>
+              <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
+                {hasExistingData ? (
+                  <button type="button" className={styles.btnPrimary} onClick={() => startFresh(card)}>
+                    Start fresh →
+                  </button>
+                ) : (
+                  <button type="button" className={styles.btnPrimary} onClick={() => choose(card)}>
+                    {card.cta}
+                  </button>
+                )}
+              </div>
             </div>
           ))}
         </div>

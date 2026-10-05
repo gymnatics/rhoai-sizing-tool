@@ -432,7 +432,7 @@ export default function Sizing() {
   const monthlyCost = pricePerHour != null ? numGpus * pricePerHour * HOURS_PER_MONTH : null;
 
   // ─── Sizing wizard export ───────────────────────────────────────────────
-  const { state: wizardState, addSizedModel } = useWizard();
+  const { state: wizardState, addSizedModel, removeSizedModel } = useWizard();
   const wizardMode = wizardState.wizardMode;
   const [addedToWizard, setAddedToWizard] = React.useState(false);
   React.useEffect(() => { setAddedToWizard(false); }, [result]);
@@ -967,6 +967,34 @@ export default function Sizing() {
               </button>
             )}
           </div>
+
+          {/* ─── Models captured for this sizing ─── */}
+          {wizardState.sizedModels.length > 0 && (
+            <div className={styles.card} style={{ marginBottom: 24 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                <div style={{ fontWeight: 700, fontSize: 14 }}>
+                  Models in this sizing ({wizardState.sizedModels.length})
+                </div>
+              </div>
+              {wizardState.sizedModels.map(m => (
+                <div key={m.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 0', borderTop: '1px solid #e8e8e8', fontSize: 13 }}>
+                  <div>
+                    <strong>{m.model}</strong>{' '}
+                    <span style={{ color: '#54585c' }}>
+                      · {m.gpu} · {m.gpusPerReplica} GPU/replica · {m.replicasNeeded} replica{m.replicasNeeded !== 1 ? 's' : ''}
+                      {m.maxConcurrentPerReplica != null ? ` · concurrency ${m.maxConcurrentPerReplica}/replica` : ''}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => removeSizedModel(m.id)}
+                    style={{ background: 'none', border: 'none', color: '#c9190b', cursor: 'pointer', fontSize: 12, fontWeight: 600, whiteSpace: 'nowrap', marginLeft: 12 }}
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
 
           {/* ─── Estimated serving performance ─── */}
           <div className={styles.card} style={{ marginBottom: 24 }}>

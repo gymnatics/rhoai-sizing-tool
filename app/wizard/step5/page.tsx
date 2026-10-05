@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { useRouter } from 'next/navigation';
 import { PageSection } from '@patternfly/react-core';
 import { useWizard } from '@/contexts/WizardContext';
 import { WizardStepHeader } from '@/components/wizard/WizardStepHeader';
@@ -18,10 +19,12 @@ function StatCard({ label, value, unit }: { label: string; value: string | numbe
 }
 
 export default function Step5Page() {
-  const { state } = useWizard();
+  const router = useRouter();
+  const { state, reset } = useWizard();
   const llmOnly = state.wizardMode === 'llm-only';
   const [generating, setGenerating] = React.useState(false);
   const [genError, setGenError] = React.useState<string | null>(null);
+  const [generated, setGenerated] = React.useState(false);
 
   const result: SizingResult = React.useMemo(
     () => calculateSizing(state.customer, state.sizedModels, state.useCases, state.platform),
@@ -56,6 +59,7 @@ export default function Step5Page() {
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
+      setGenerated(true);
     } catch (err) {
       setGenError(err instanceof Error ? err.message : 'Failed to generate the Excel workbook.');
     } finally {
@@ -240,6 +244,29 @@ export default function Step5Page() {
           </button>
         </div>
         {genError && <div className={styles.alertRed}>{genError}</div>}
+
+        {generated && (
+          <div className={styles.card} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, borderColor: '#3d7317', background: '#f6fbf4' }}>
+            <div>
+              <div style={{ fontWeight: 700, fontSize: 15, color: '#3d7317' }}>Workbook generated successfully</div>
+              <div style={{ fontSize: 13, color: '#54585c', marginTop: 2 }}>
+                Ready to start a new sizing for a different customer? This clears all current data.
+              </div>
+            </div>
+            <button
+              type="button"
+              className={styles.btnSecondary}
+              onClick={() => {
+                if (window.confirm('Clear all current data (customer, models, use cases, platform) and start a new sizing?')) {
+                  reset();
+                  router.push('/wizard');
+                }
+              }}
+            >
+              Start new sizing
+            </button>
+          </div>
+        )}
       </div>
     </PageSection>
   );
