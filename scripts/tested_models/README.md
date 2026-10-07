@@ -53,14 +53,26 @@ build_registry.py      # Generate the tested-model registry
 build_dashboard.py     # Generate dashboard data
 ```
 
-The scripts are intentionally kept independent of the ConfigIQ web runtime so
-they can run in GitHub Actions against refreshed benchmark data.
+The scripts are intentionally kept independent of the ConfigIQ web runtime.
+Internal extraction is run only from an approved environment; GitHub Actions
+consumes the resulting pinned public Hugging Face dataset revision.
 
 The repeatable GitHub workflow is `.github/workflows/tested-models.yml`. It
-reads `PERF_DATA_API_URL` from a repository secret, generates all datasets and
-artifacts, and uploads only the sanitized registry/Triton/dashboard bundle.
+downloads a pinned revision of the public
+`redhat-performance/configiq-performance-data` Hugging Face dataset, generates
+all artifacts, and uploads only the sanitized registry/Triton/dashboard bundle.
 Raw parquet, split data, source identifiers, and training work files are not
 uploaded by the workflow.
+
+To publish a new sanitized ground-truth revision after running extraction from
+the approved source environment:
+
+```bash
+uv run --group tested-models python scripts/tested_models/publish_ground_truth.py
+```
+
+Set the GitHub repository variable `TESTED_DATASET_REVISION` to the resulting
+Hugging Face commit before starting the automation workflow.
 
 ## Stage 5: performance envelope classifiers
 
@@ -71,6 +83,7 @@ uv run --group tested-models python scripts/tested_models/split_dataset.py
 uv run --group tested-models python scripts/tested_models/label_data.py
 uv run --group tested-models python scripts/tested_models/train_classifiers.py
 uv run --group tested-models python scripts/tested_models/export_triton.py
+uv run --group tested-models python scripts/tested_models/build_dashboard.py
 uv run --group tested-models python scripts/tested_models/build_registry.py
 uv run --group tested-models python scripts/tested_models/validate_artifacts.py
 ```
@@ -88,6 +101,6 @@ The feature schema is recorded in each metadata file, including categorical
 vocabularies, numeric medians, feature order, and the 0.50/0.85 decision
 thresholds. Only configuration and derived memory-pressure fields are features;
 throughput, latency, identifiers, runtime arguments, MLflow fields, and other
-source measurements are excluded. Source parquet files can contain operational
-identifiers and runtime strings, so they remain local build inputs and must not
-be published with model bundles or dashboards.
+measurements are excluded from classifier inputs. The internal source API may
+contain operational identifiers and runtime strings; extraction drops them
+before writing the sanitized parquet files published to Hugging Face.
